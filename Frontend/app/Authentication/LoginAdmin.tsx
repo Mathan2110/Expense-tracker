@@ -3,7 +3,7 @@ import { useState } from "react";
 import { ImageBackground, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { BASE_URL } from '../../config.js'
 
 export default function Login(){
     const [email,setEmail] =  useState('');
@@ -14,17 +14,16 @@ export default function Login(){
     const handleLogin = async() => {
         setErrormsg('')
         try{
-          const user = await axios.post('http://192.168.129.243:3000/login', {
+          const user = await axios.post(`${BASE_URL}/login`, {
               email,
               password,
               role:'admin',
             })
-            // console.log(email)
             await AsyncStorage.setItem('userEmail', email);
             const msg = user.data.message
             if (msg === "success_admin"){
               router.push({
-                pathname: '/dashboard/dashboardAdmin',
+                pathname: '/Dashboard/dashboardAdmin',
                 params: { email: email },
               })
             }
@@ -46,7 +45,7 @@ export default function Login(){
         <View style={styles.background}>
             <View style={styles.role_container} >
                 <Text style={styles.role_admin} >Admin</Text>
-                <Text style={styles.role} onPress={()=>router.push('/Authentication/Login')} >Partner</Text>
+                <Text style={styles.role} onPress={()=>router.push('/Login')} >Partner</Text>
             </View>
             <Text style={styles.title}>Login</Text>
             <TextInput style={styles.inputField} placeholder="Email" onChangeText={setEmail} />

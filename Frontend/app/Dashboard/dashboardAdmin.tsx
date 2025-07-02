@@ -6,6 +6,7 @@ import { useState,useEffect } from "react";
 import { Picker } from '@react-native-picker/picker';
 import { format } from 'date-fns';
 import { router } from 'expo-router';
+import { BASE_URL } from '../../config.js'
 
 
 export default function dashboard(){
@@ -35,7 +36,7 @@ export default function dashboard(){
         
         const fetchExpenses = async () => {
             try {
-                const res = await axios.get(`http://192.168.129.243:3000/expense`);
+                const res = await axios.get(`${BASE_URL}/expense`);
                 setExpenses(res.data);
             } catch (error) {
                 console.error(error);
@@ -45,15 +46,12 @@ export default function dashboard(){
         const getUserDetails = async () => {
             try {
                 const email = await AsyncStorage.getItem('userEmail');
-                console.log('Stored email:', email)
                 if (!email) return;
 
-                const res = await axios.get(`http://192.168.129.243:3000/user?email=${email}`);
-                 console.log('Response from backend:', res.data); 
+                const res = await axios.get(`${BASE_URL}/user?email=${email}`);
                 setName(res.data.name);
                 setEmail(res.data.email);
                 setRole(res.data.role);
-                console.log(name)
 
             } catch (error) {
                 console.error('Fetch user failed:', error);
@@ -62,18 +60,16 @@ export default function dashboard(){
 
          const updateStatus = async (id:String, newStatus:String) => {
             try {
-            const res = await axios.put(`http://192.168.129.243:3000/${id}`, {
+            const res = await axios.put(`${BASE_URL}/${id}`, {
                 status: newStatus,
                 note
             });
             setShowNote(false)
             if (newStatus === "Approved"){
-                await axios.put(`http://192.168.129.243:3000/generate/expense/${id}`);
-                console.log("Voucher generated")
+                await axios.put(`${BASE_URL}/generate/expense/${id}`);
                 setNote("")
             }
             fetchExpenses(); 
-            console.log('Updated:', res.data);
         } catch (err) {
             console.error('Error updating status:', err);
             }
@@ -91,17 +87,17 @@ export default function dashboard(){
 
         const exportCsv = ()=>{
             setShowExport(false)
-            Linking.openURL('http://192.168.129.243:3000/export/csv')
+            Linking.openURL(`${BASE_URL}/export/csv`)
         }
 
         const exportPdf = ()=>{
             setShowExport(false)
-            Linking.openURL('http://192.168.129.243:3000/export/pdf')
+            Linking.openURL(`${BASE_URL}/export/pdf`)
         }
 
         const handleLogout = async () => {
             await AsyncStorage.clear();
-            router.push('/Authentication/Login')
+            router.push('/Login')
         };
 
         const handleDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
@@ -114,12 +110,6 @@ export default function dashboard(){
             setShowDate(false);
         };
         
-        // const onChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
-        //     if (event.type === "set" && selectedDate) {
-        //         setDate(selectedDate); // only set if selected
-        //     }
-        //     setShowDate(false); // hide picker either way
-        // };
         
          const filteredExpenses = expenses.filter((item) => {
             const matchesStatus = status ? item.status === status : true;

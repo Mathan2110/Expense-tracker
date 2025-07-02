@@ -16,7 +16,11 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.mathan2110.ExpenseTracker"
     },
     "web": {
       "bundler": "metro",
@@ -44,6 +48,19 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "7aa23407-35bb-4d1b-8fd2-61e06eb842c1"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/7aa23407-35bb-4d1b-8fd2-61e06eb842c1"
+    },
+    "owner": "mathan2110"
   }
 }

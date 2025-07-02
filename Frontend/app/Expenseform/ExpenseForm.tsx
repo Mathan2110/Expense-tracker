@@ -5,8 +5,8 @@ import { Picker } from '@react-native-picker/picker';
 import DateTimePicker , { DateTimePickerEvent }  from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
 import { useEffect, useState } from "react";
-import { router } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BASE_URL } from '../../config.js'
 
 export default function ExpenseForm(){
     const [date, setDate] = useState(new Date());
@@ -28,14 +28,11 @@ export default function ExpenseForm(){
     const getUserDetails = async () => {
             try {
                 const email = await AsyncStorage.getItem('userEmail');
-                console.log('Stored email:', email)
                 if (!email) return;
 
-                const res = await axios.get(`http://192.168.129.243:3000/user?email=${email}`);
-                 console.log('Response from backend:', res.data); 
+                const res = await axios.get(`${BASE_URL}/user?email=${email}`);
                 setName(res.data.name);
                 setEmail(res.data.email);
-                console.log(name)
 
             } catch (error) {
                 console.error('Fetch user failed:', error);
@@ -54,7 +51,7 @@ export default function ExpenseForm(){
                 
                 if (!email) return;
                 
-                const expense = await axios.post('http://192.168.129.243:3000/expense', {
+                const expense = await axios.post(`${BASE_URL}/expense`, {
                     email,
                     name,
                     amount,
@@ -77,7 +74,6 @@ export default function ExpenseForm(){
             setDate(selectedDate)
             setFormatedDate(()=>formatDate);
             setShowDate(false)
-            console.log(formatDate)
             }
             setShowDate(false);
     }
@@ -93,8 +89,6 @@ export default function ExpenseForm(){
         if (!result.canceled) {
         const uri = result.assets[0].uri;
         setReceiptUri(uri);
-
-        // Upload the image
         const formData = new FormData();
         formData.append('receipt', {
             uri,
@@ -102,7 +96,7 @@ export default function ExpenseForm(){
             type: 'image/jpeg',
         } as any); 
 
-        await fetch('http://<Your-ip>:3000/upload', {
+        await fetch(`${BASE_URL}/upload`, {
             method: 'POST',
             headers: {
             'Content-Type': 'multipart/form-data',

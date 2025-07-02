@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BASE_URL } from '../../config.js'
 
 export default function Register(){
     const [email,setEmail] =  useState('');
@@ -24,14 +25,14 @@ export default function Register(){
         }
 
         try{
-          const user = await axios.post('http://192.168.129.243:3000/register', {
+          const user = await axios.post(`${BASE_URL}/register`, {
               name,
               email,
               password,
               role:"partner"
             })
             router.push({
-                pathname: '/dashboard/dashboard',
+                pathname: '/Dashboard/dashboard',
                 params: { email: email },
               })
             await AsyncStorage.setItem('userEmail', email);
@@ -58,7 +59,7 @@ export default function Register(){
                     <Text style={styles.buttonText}>Register</Text>
                 </TouchableOpacity>
             </View>
-        <Text style={styles.new_user} >Already have an account ? <Text style={{color:"orange",fontSize:18, fontWeight:"800"}} onPress={()=>router.push('/Authentication/Login')} >Login</Text> </Text>
+        <Text style={styles.new_user} >Already have an account ? <Text style={{color:"orange",fontSize:18, fontWeight:"800"}} onPress={()=>router.push('/Login')} >Login</Text> </Text>
         </View>
         </ImageBackground>
     </View>)

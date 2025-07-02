@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { router } from 'expo-router';
 import ExpenseForm from '../Expenseform/ExpenseForm';
+import { BASE_URL } from '../../config.js'
 
 
 export default function dashboard(){
@@ -16,13 +17,14 @@ export default function dashboard(){
     const [openMenu,setOpenMenu] = useState(false)
 
     useEffect(() => {
+        if (showExpense) return;
         fetchExpenses();
-        getUserDetails()
-    }, [expenses]);
+        getUserDetails();
+    }, [expenses,showExpense]);
 
     const fetchExpenses = async () => {
         try {
-            const res = await axios.get('http://192.168.129.243:3000/expense');
+            const res = await axios.get(`${BASE_URL}/expense`);
             setExpenses(res.data);
         } catch (error) {
             console.error(error);
@@ -32,10 +34,8 @@ export default function dashboard(){
     const getUserDetails = async () => {
             try {
                 const stored_email = await AsyncStorage.getItem('userEmail');
-                console.log('Stored email:', stored_email)
                 if (!stored_email) return;
-                const res = await axios.get(`http://192.168.129.243:3000/user?email=${stored_email}`);
-                console.log('Response from backend:', res.data); 
+                const res = await axios.get(`${BASE_URL}/user?email=${stored_email}`);
                 setName(res.data.name);
                 setEmail(res.data.email);
                 setRole(res.data.role);
@@ -58,7 +58,7 @@ export default function dashboard(){
 
     const handleLogout = async () => {
             await AsyncStorage.clear();
-            router.push('/Authentication/Login')
+            router.push('/Login')
     };
     const filteredExpenses = expenses.filter((item) => {
             const matchedEmail = email ? item.email === email : true;
@@ -71,8 +71,29 @@ export default function dashboard(){
             {openMenu ? <Text style={[styles.menu_text,{color:'white'}]} onPress={()=>setOpenMenu(false)} >Close</Text> : <Text style={[styles.menu_text,{color:'white'}]} onPress={()=>setOpenMenu(true)} >Menu</Text>}
         </View>
         <View style={styles.container}>
-            {filteredExpenses[0] ? 
-            <>
+            {filteredExpenses.length === 0 ?
+            (<View style={styles.container_new} >
+                {openMenu && (
+                <View style={styles.menu} >
+                    <Text style={styles.menu_text} >Name : {name}</Text>
+                    <Text style={styles.menu_text} >Email  : {email}</Text>
+                    <Text style={styles.menu_text} >Role    : {role}</Text>
+                    <TouchableOpacity>
+                        <Text style={styles.logout_btn} onPress={handleLogout} >Log out</Text>
+                    </TouchableOpacity>
+                </View>
+                )}
+                <Text style={styles.text_add} >No expenses submitted</Text>
+                <Modal visible={showExpense} animationType='none' transparent >
+                    <Text style={styles.cross} onPress={()=>setShowExpense(false)} >x</Text>
+                    <ExpenseForm />
+            </Modal>
+            <TouchableOpacity style={styles.submitBtn} onPress={()=>setShowExpense(true)}>
+                <Text style={styles.btnText} >+ Submit New Expense</Text>
+            </TouchableOpacity>
+            </View>) 
+            :
+            (<>
             {openMenu && (
                 <View style={styles.menu} >
                     <Text style={styles.menu_text} >Name : {name}</Text>
@@ -112,28 +133,7 @@ export default function dashboard(){
             <TouchableOpacity style={styles.submitBtn} onPress={()=>setShowExpense(true)}>
                 <Text style={styles.btnText} >+ Submit New Expense</Text>
             </TouchableOpacity>
-            </>
-            :
-            <View style={styles.container_new} >
-                {openMenu && (
-                <View style={styles.menu} >
-                    <Text style={styles.menu_text} >Name : {name}</Text>
-                    <Text style={styles.menu_text} >Email  : {email}</Text>
-                    <Text style={styles.menu_text} >Role    : {role}</Text>
-                    <TouchableOpacity>
-                        <Text style={styles.logout_btn} onPress={handleLogout} >Log out</Text>
-                    </TouchableOpacity>
-                </View>
-                )}
-                <Text style={styles.text_add} >No expenses submitted</Text>
-                <Modal visible={showExpense} animationType='none' transparent >
-                    <Text style={styles.cross} onPress={()=>setShowExpense(false)} >x</Text>
-                    <ExpenseForm />
-            </Modal>
-            <TouchableOpacity style={styles.submitBtn} onPress={()=>setShowExpense(true)}>
-                <Text style={styles.btnText} >+ Submit New Expense</Text>
-            </TouchableOpacity>
-            </View>
+            </>)
             }
         </View>
     </>

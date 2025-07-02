@@ -4,6 +4,7 @@ import { ImageBackground, StatusBar, StyleSheet, Text, TextInput, TouchableOpaci
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Redirect } from 'expo-router';
+import { BASE_URL } from '../config.js'
 
 
 // export default function testing(){
@@ -19,7 +20,7 @@ export default function Login(){
     const handleLogin = async() => {
         setErrormsg('')
         try{
-          const user = await axios.post('http://192.168.129.243:3000/login', {
+          const user = await axios.post(`${BASE_URL}/login`, {
               email,
               password,
               role:'partner',
@@ -27,13 +28,12 @@ export default function Login(){
             const msg = user.data.message
             if (msg === "success_partner"){
               router.push({
-                pathname: '/dashboard/dashboard',
+                pathname: '/Dashboard/dashboard',
                 params: { email: email },
               })
             }
              await AsyncStorage.setItem('userEmail', email);
           }catch(error:unknown){
-            console.log(error)
              if (axios.isAxiosError(error)) {
                 const msg = error.response?.data?.message || "Something went wrong.";
                 setErrormsg(msg);
@@ -46,7 +46,7 @@ export default function Login(){
 
     return <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" translucent={false} hidden={false} />
-        <ImageBackground style={styles.background} resizeMode="cover" source={require('../../assets/expense.jpg')} >
+        <ImageBackground style={styles.background} resizeMode="cover" source={require('../assets/expense.jpg')} >
         <View style={styles.background}>
             <View style={styles.role_container} >
                 <Text style={styles.role} onPress={()=>router.push('/Authentication/LoginAdmin')} >Admin</Text>

@@ -1,0 +1,1 @@
+export const BASE_URL = 'https://expense-tracker-backend-production-1e6.up.railway.app'
