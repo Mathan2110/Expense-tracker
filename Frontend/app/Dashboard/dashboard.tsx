@@ -78,8 +78,8 @@ export default function dashboard(){
                     <Text style={styles.menu_text} >Name : {name}</Text>
                     <Text style={styles.menu_text} >Email  : {email}</Text>
                     <Text style={styles.menu_text} >Role    : {role}</Text>
-                    <TouchableOpacity>
-                        <Text style={styles.logout_btn} onPress={handleLogout} >Log out</Text>
+                    <TouchableOpacity onPress={handleLogout} >
+                        <Text style={styles.logout_btn}  >Log out</Text>
                     </TouchableOpacity>
                 </View>
                 )}
@@ -99,8 +99,8 @@ export default function dashboard(){
                     <Text style={styles.menu_text} >Name : {name}</Text>
                     <Text style={styles.menu_text} >Email  : {email}</Text>
                     <Text style={styles.menu_text} >Role    : {role}</Text>
-                    <TouchableOpacity>
-                        <Text style={styles.logout_btn} onPress={handleLogout} >Log out</Text>
+                    <TouchableOpacity onPress={handleLogout} >
+                        <Text style={styles.logout_btn} >Log out</Text>
                     </TouchableOpacity>
                 </View>
             )}

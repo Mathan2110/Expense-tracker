@@ -128,16 +128,16 @@ export default function dashboard(){
                     <Text style={styles.menu_text} >Name : {name}</Text>
                     <Text style={styles.menu_text} >Email  : {email}</Text>
                     <Text style={styles.menu_text} >Role    : {role}</Text>
-                    <TouchableOpacity>
-                        <Text style={styles.logout_btn} onPress={handleLogout} >Log out</Text>
+                    <TouchableOpacity onPress={handleLogout} >
+                        <Text style={styles.logout_btn}  >Log out</Text>
                     </TouchableOpacity>
                 </View>
             )}
             {showDate && <DateTimePicker value={pickedDate} mode="date" display="default" onChange={handleDate} />}
             <View style={styles.head_container} >
                 <Text style={styles.filterText} >Filters</Text>
-                <TouchableOpacity>
-                    <Text style={[styles.filterText,{backgroundColor:'green', paddingHorizontal:20,paddingVertical:5,borderRadius:10}]} onPress={()=>setShowExport(true)} >Export CSV/PDF</Text>
+                <TouchableOpacity onPress={()=>setShowExport(true)}>
+                    <Text style={[styles.filterText,{backgroundColor:'green', paddingHorizontal:20,paddingVertical:5,borderRadius:10}]}  >Export CSV/PDF</Text>
                 </TouchableOpacity>
                 <Modal visible={showExport} animationType='none' transparent >
                     <View style={styles.note_background} >
@@ -223,10 +223,8 @@ export default function dashboard(){
                             source={{ uri: selectedUri ?? '' }}
                             style={{ width: '100%', height: '85%', resizeMode: 'contain' }}
                         />
-                        {/* <TouchableOpacity onPress={()=>setShowReceipt(false)} ><Text style={styles.receiptClosebtn}>Close</Text></TouchableOpacity> */}
                         </View>
                     </Modal>
-                    {/* <Text>{item.receiptUri}</Text> */}
                     <View style={{ flex: 1 }}>
                     <Text style={styles.name}>{item.name}</Text>
                     <Text style={styles.date}>{item.date}</Text>
@@ -236,8 +234,9 @@ export default function dashboard(){
                     <Text style={styles.amount}>₹{item.amount}</Text>
                     {item.status === 'Pending'? (
                     <View style={styles.actionButtons}>
-                        <TouchableOpacity style={[styles.actionButton,{backgroundColor:'#34D399'}]}><Text style={{color:'white'}} onPress={()=>updateStatus(item._id,"Approved")} >Approve</Text></TouchableOpacity>
-                        <TouchableOpacity style={[styles.actionButton,{ backgroundColor:'#EF4444' }]}><Text style={{color:'white'}} onPress={()=>setShowNote(true)} >Reject</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={()=>updateStatus(item._id,"Approved")} style={[styles.actionButton,{backgroundColor:'#34D399'}]}><Text style={{color:'white'}}  >Approve</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={()=>setShowNote(true)} style={[styles.actionButton,{ backgroundColor:'#EF4444' }]}><Text style={{color:'white'}}  >Reject</Text></TouchableOpacity>
+
                         {/* showing notes */}
                         
                         <Modal visible={showNote} animationType='none' transparent >
@@ -252,7 +251,7 @@ export default function dashboard(){
                                         style={[styles.input,{height:150,width:250,color:'white'},]}
                                         textAlignVertical='top'
                                     />
-                                    <TouchableOpacity style={[styles.actionButton,{ backgroundColor:'#EF4444',height:50,width:150 }]}><Text style={{color:'white',fontWeight:600,textAlignVertical:'center',height:'100%'}} onPress={()=>updateStatus(item._id,"Rejected")} >Reject</Text></TouchableOpacity>
+                                    <TouchableOpacity style={[styles.actionButton,{ backgroundColor:'#EF4444',height:50,width:150 }]} onPress={()=>updateStatus(item._id,"Rejected")}><Text style={{color:'white',fontWeight:600,textAlignVertical:'center',height:'100%'}}  >Reject</Text></TouchableOpacity>
                             </View>
                             </View>
                         </Modal>
