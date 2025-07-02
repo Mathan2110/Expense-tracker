@@ -121,7 +121,7 @@ export default function dashboard(){
                         <Text style={[styles.cell,status_color(item.status)]} >{item.status}</Text>
                     </View>
                     {item.status === "Approved" ? (
-                        <Text style={styles.link} onPress={()=>Linking.openURL(`http://192.168.129.243:3000${item.voucherPath}`)} >Download Voucher</Text>
+                        <Text style={styles.link} onPress={()=>Linking.openURL(`${BASE_URL}${item.voucherPath}`)} >Download Voucher</Text>
                         ):<Text style={[styles.link,{color:'gray'}]} >{item.note}</Text>}
                         </>
                     )}

@@ -181,7 +181,7 @@ export default function dashboard(){
                         <Picker.Item label="Fuel" value="Fuel" />
                         <Picker.Item label="Accommodation" value="Accommodation" />
                         <Picker.Item label="Client Meeting" value="Client meeting" />
-                        <Picker.Item label="Office Supplies" value="Office supplies" />
+                        <Picker.Item label="Office Supplies" value="Office suplies" />
                         <Picker.Item label="Software Subscription" value="Software subscription" />
                         <Picker.Item label="Marketing" value="Marketing" />
                         <Picker.Item label="Salary" value="Salary" />
