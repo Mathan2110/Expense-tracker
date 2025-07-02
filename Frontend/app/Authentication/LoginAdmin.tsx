@@ -26,6 +26,8 @@ export default function Login(){
                 pathname: '/Dashboard/dashboardAdmin',
                 params: { email: email },
               })
+            }else{
+              setErrormsg("You are partner cant log as admin")
             }
         }catch(error){
           console.log(error)

@@ -20,17 +20,19 @@ export default function Login(){
     const handleLogin = async() => {
         setErrormsg('')
         try{
-          const user = await axios.post(`${BASE_URL}/login`, {
-              email,
-              password,
-              role:'partner',
-            })
+            const user = await axios.post(`${BASE_URL}/login`, {
+                email,
+                password,
+                role:'partner',
+              })
             const msg = user.data.message
             if (msg === "success_partner"){
               router.push({
                 pathname: '/Dashboard/dashboard',
                 params: { email: email },
               })
+            }else{
+              setErrormsg("You are admin cant log as partner")
             }
              await AsyncStorage.setItem('userEmail', email);
           }catch(error:unknown){
