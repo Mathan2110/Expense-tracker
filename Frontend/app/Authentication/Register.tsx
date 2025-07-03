@@ -29,7 +29,7 @@ export default function Register(){
               name,
               email,
               password,
-              role:"partner"
+              role:"Partner"
             })
             router.push({
                 pathname: '/Dashboard/dashboard',

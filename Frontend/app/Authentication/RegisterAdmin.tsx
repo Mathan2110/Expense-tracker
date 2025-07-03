@@ -16,19 +16,13 @@ export default function Register(){
 
     const handleRegister = async() => {
         setErrormsg('')
-        const userData = {
-            name,
-            email,
-            password,
-            role:"admin"
-        }
 
         try{
           const user = await axios.post(`${BASE_URL}/register`, {
               name,
               email,
               password,
-              role:"admin"
+              role:"Admin"
             })
             router.push({
                 pathname: '/Dashboard/dashboardAdmin',

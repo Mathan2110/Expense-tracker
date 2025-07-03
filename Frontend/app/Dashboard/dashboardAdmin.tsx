@@ -30,6 +30,7 @@ export default function dashboard(){
     
     
     useEffect(() => {
+        if (showNote) return;
         fetchExpenses();
         getUserDetails();
         }, []);
@@ -60,7 +61,7 @@ export default function dashboard(){
 
          const updateStatus = async (id:String, newStatus:String) => {
             try {
-            const res = await axios.put(`${BASE_URL}/${id}`, {
+                const res = await axios.put(`${BASE_URL}/${id}`, {
                 status: newStatus,
                 note
             });
@@ -74,6 +75,27 @@ export default function dashboard(){
             console.error('Error updating status:', err);
             }
         };
+
+        const updateReject = async(newStatus:String) => {
+            try {
+                const id = await AsyncStorage.getItem('itemId')
+                const res = await axios.put(`${BASE_URL}/${id}`, {
+                status: newStatus,
+                note
+            });
+            setShowNote(false)
+            fetchExpenses();
+            } catch (err) {
+            console.error('Error updating status:', err);
+            }
+        }
+
+        const updateNote = async(itemId:string) =>{
+            await AsyncStorage.setItem('itemId', itemId);
+            setShowNote(true)
+        }
+        
+        
 
         const openReceipt = (uri: string) => {
             setSelectedUri(uri);
@@ -208,7 +230,7 @@ export default function dashboard(){
             {filteredExpenses.length === 0 
             ?<Text style={styles.not_found} >No expenses found</Text>
             :<FlatList
-                data={filteredExpenses}
+                data={filteredExpenses.reverse()}
                 keyExtractor={item => item._id.toString()}
                 renderItem={({ item }) => (
                 <View style={styles.card} >
@@ -235,7 +257,7 @@ export default function dashboard(){
                     {item.status === 'Pending'? (
                     <View style={styles.actionButtons}>
                         <TouchableOpacity onPress={()=>updateStatus(item._id,"Approved")} style={[styles.actionButton,{backgroundColor:'#34D399'}]}><Text style={{color:'white'}}  >Approve</Text></TouchableOpacity>
-                        <TouchableOpacity onPress={()=>setShowNote(true)} style={[styles.actionButton,{ backgroundColor:'#EF4444' }]}><Text style={{color:'white'}}  >Reject</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={()=>updateNote(String(item._id))} style={[styles.actionButton,{ backgroundColor:'#EF4444' }]}><Text style={{color:'white'}}  >Reject</Text></TouchableOpacity>
 
                         {/* showing notes */}
                         
@@ -251,7 +273,7 @@ export default function dashboard(){
                                         style={[styles.input,{height:150,width:250,color:'white'},]}
                                         textAlignVertical='top'
                                     />
-                                    <TouchableOpacity style={[styles.actionButton,{ backgroundColor:'#EF4444',height:50,width:150 }]} onPress={()=>updateStatus(item._id,"Rejected")}><Text style={{color:'white',fontWeight:600,textAlignVertical:'center',height:'100%'}}  >Reject</Text></TouchableOpacity>
+                                    <TouchableOpacity style={[styles.actionButton,{ backgroundColor:'#EF4444',height:50,width:150 }]} onPress={()=>updateReject("Rejected")}><Text style={{color:'white',fontWeight:600,textAlignVertical:'center',height:'100%'}}  >Reject</Text></TouchableOpacity>
                             </View>
                             </View>
                         </Modal>

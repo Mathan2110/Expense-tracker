@@ -27,7 +27,7 @@ export default function Login(){
                 params: { email: email },
               })
             }else{
-              setErrormsg("You are partner cant log as admin")
+              setErrormsg("You are partner can't log as admin")
             }
         }catch(error){
           console.log(error)

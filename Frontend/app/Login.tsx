@@ -6,9 +6,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Redirect } from 'expo-router';
 import { BASE_URL } from '../config.js'
 
-
+// For developing
 // export default function testing(){
-//   return <Redirect href="/dashboard" />;
+//   return <Redirect href="/Dashboard/dashboard" />;
 // }
 
 export default function Login(){
@@ -32,7 +32,7 @@ export default function Login(){
                 params: { email: email },
               })
             }else{
-              setErrormsg("You are admin cant log as partner")
+              setErrormsg("You are admin can't log as partner")
             }
              await AsyncStorage.setItem('userEmail', email);
           }catch(error:unknown){

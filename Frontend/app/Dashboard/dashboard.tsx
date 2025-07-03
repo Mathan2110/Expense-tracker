@@ -111,7 +111,7 @@ export default function dashboard(){
             </View>
 
             <FlatList
-                data={filteredExpenses}
+                data={filteredExpenses.reverse()}
                 keyExtractor={(item) => item._id.toString()}
                 renderItem={({ item }) => (
                     <>
@@ -252,7 +252,10 @@ const styles = StyleSheet.create({
     },
     cell: { 
         color: 'white',
-        width:125,
+        display:'flex',
+        justifyContent:'center',
+        alignItems:'center',
+        width:120,
         paddingVertical:10,
         fontSize:14,
         textAlign:'center'
@@ -266,9 +269,10 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
     },
     link: { 
-      color: '#60a5fa',
-       marginTop: 4,
-       textAlign:'right',
+        color: '#60a5fa',
+        marginTop: 4,
+        marginRight:10,
+        textAlign:'right',
     },
     filter: {
         marginTop: 20,

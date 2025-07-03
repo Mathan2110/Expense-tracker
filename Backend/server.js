@@ -1,21 +1,20 @@
-const express = require('express');
+const express = require('express'); 
 const app = express();
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const cors = require('cors');
 const date = require('date-fns')
 const format = date.format
-const PDFDocument = require('pdfkit');
+const PDFDocument = require('pdfkit'); 
 const fs = require('fs');
 const path = require('path');
 
+
+
 app.use(cors());
 app.use(express.json({ limit: '10mb' }))
-
-mongoose.connect('mongodb://127.0.0.1:27017/expenseApp', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(()=>{console.log("database connected successfully")}).catch((e)=>{console.log(e)})
+require('dotenv').config();
+mongoose.connect(process.env.MONGO_URI).then(()=>{console.log("database connected successfully")}).catch((e)=>{console.log(e)}).catch(err => console.error("MongoDB connection error:", err));
 
 require('./Schemas/userSchema');
 const users = mongoose.model("Users");
@@ -121,7 +120,7 @@ app.post('/upload', async (req, res) => {
   try {
     const newImage = new ImageModel({ image });
     await newImage.save();
-    const imageUrl = `http://192.168.129.243:3000/Receipts/${newImage._id}`; 
+    const imageUrl = `https://expense-tracker-backend-production-1e6.up.railway.app/Receipts/${newImage._id}`; 
     res.status(200).json({
         message:"image upload successfully",
         uri:imageUrl,
@@ -135,7 +134,6 @@ app.post('/upload', async (req, res) => {
 
 app.post("/expense",async (req,res)=>{ 
   const { amount,date,category,receiptUri,status,name,voucherPath,email } = req.body;
-  // const formattedDate = format(new Date(date), 'MM/dd/yyyy');
 
   try{
     await expense.create({
@@ -194,6 +192,7 @@ app.post("/register",async (req,res)=>{
 app.post('/login', async (req, res) => {
   const { email, password, role } = req.body;
   const user = await users.findOne({ email });
+  console.log(user)
 
   if (!user) return res.status(404).json({ message:"Invalid email"});
 
@@ -201,7 +200,7 @@ app.post('/login', async (req, res) => {
 
   if (!isMatch) return res.status(401).json({ message:"Enter correct password" });
 
-  if (role === "partner"){
+  if (user.role === "Partner"){
       res.json({ message:"success_partner" });
   }else{
     res.json({ message:"success_admin"})
